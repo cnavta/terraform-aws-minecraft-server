@@ -54,6 +54,7 @@ resource "aws_instance" "minecraftr-ec2" {
       type = "ssh"
       host = self.public_ip
       user = "ec2-user"
+      private_key = var.minecraft_private_key
     }
   }
 
@@ -67,6 +68,7 @@ resource "aws_instance" "minecraftr-ec2" {
       type = "ssh"
       host = self.public_ip
       user = "ec2-user"
+      private_key = var.minecraft_private_key
     }
   }
 }
