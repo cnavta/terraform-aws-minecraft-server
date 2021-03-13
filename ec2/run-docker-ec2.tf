@@ -89,6 +89,14 @@ resource "aws_eip_association" "minecraft-ip-assoc" {
   allocation_id = aws_eip.minecraft-ip.id
 }
 
+resource "aws_route53_record" "minecraft_domain_assoc" {
+  name = "minecraft.ix-n.com"
+  type = "A"
+  ttl = 300
+  zone_id = "Z1S38SZN5Q68MB"
+  records = [aws_eip.minecraft-ip.public_ip]
+}
+
 output "external-ip" {
   value = aws_eip.minecraft-ip.public_ip
 }
