@@ -20,7 +20,7 @@ module "vpc" {
 }
 
 resource "aws_ebs_volume" "minecraft-data-volume" {
-  availability_zone = "us-west-2"
+  availability_zone = "us-west-2a"
   size = 10
 }
 
