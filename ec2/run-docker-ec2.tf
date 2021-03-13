@@ -107,7 +107,7 @@ resource "aws_volume_attachment" "minecraft-volume-att" {
   volume_id = aws_ebs_volume.minecraft-data-volume.id
 
   provisioner "file" {
-    source      = "setup.sh"
+    source      = "mount-and-start.sh"
     destination = "/tmp/mount-and-start.sh"
     connection {
       type = "ssh"
