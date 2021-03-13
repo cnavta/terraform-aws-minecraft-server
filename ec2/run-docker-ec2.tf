@@ -105,6 +105,31 @@ resource "aws_volume_attachment" "minecraft-volume-att" {
   device_name = "/dev/sdf"
   instance_id = aws_instance.minecraftr-ec2.id
   volume_id = aws_ebs_volume.minecraft-data-volume.id
+
+  provisioner "file" {
+    source      = "setup.sh"
+    destination = "/tmp/mount-and-start.sh"
+    connection {
+      type = "ssh"
+      host = aws_eip.minecraft-ip.public_ip
+      user = "ec2-user"
+      private_key = var.minecraft_private_key
+    }
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "chmod +x /tmp/mount-and-start.sh",
+      "/tmp/mount-and-start.sh",
+    ]
+
+    connection {
+      type = "ssh"
+      host = aws_eip.minecraft-ip.public_ip
+      user = "ec2-user"
+      private_key = var.minecraft_private_key
+    }
+  }
 }
 
 resource "aws_route53_record" "minecraft_domain_assoc" {
