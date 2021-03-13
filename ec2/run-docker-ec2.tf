@@ -19,6 +19,11 @@ module "vpc" {
   }
 }
 
+resource "aws_ebs_volume" "minecraft-data-volume" {
+  availability_zone = "us-west-2"
+  size = 10
+}
+
 resource "aws_security_group" "minecraft-security-group" {
   name = "minecraft-security-group"
   vpc_id = module.vpc.vpc_id
@@ -60,7 +65,7 @@ resource "aws_key_pair" "minecraft-key" {
 
 resource "aws_instance" "minecraftr-ec2" {
   ami = "ami-00f9f4069d04c0c6e"
-  instance_type = "t2.micro"
+  instance_type = "m3.large"
   subnet_id = module.vpc.public_subnets[0]
   key_name = "minecraft-key"
   security_groups = [aws_security_group.minecraft-security-group.id]
@@ -94,6 +99,12 @@ resource "aws_instance" "minecraftr-ec2" {
 resource "aws_eip_association" "minecraft-ip-assoc" {
   instance_id = aws_instance.minecraftr-ec2.id
   allocation_id = aws_eip.minecraft-ip.id
+}
+
+resource "aws_volume_attachment" "minecraft-volume-att" {
+  device_name = "/dev/sdf"
+  instance_id = aws_instance.minecraftr-ec2.id
+  volume_id = aws_ebs_volume.minecraft-data-volume.id
 }
 
 resource "aws_route53_record" "minecraft_domain_assoc" {
