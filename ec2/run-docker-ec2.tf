@@ -60,8 +60,8 @@ resource "aws_instance" "minecraftr-ec2" {
 
   provisioner "remote-exec" {
     inline = [
-      "chmod +x /tmp/script.sh",
-      "/tmp/script.sh",
+      "chmod +x /tmp/setup.sh",
+      "/tmp/setup.sh",
     ]
 
     connection {
