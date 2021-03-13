@@ -19,8 +19,9 @@ resource "aws_security_group" "minecraft-security-group" {
   vpc_id = module.vpc.vpc_id
   ingress {
     from_port = 22
-    protocol = "ssh"
+    protocol = "tcp"
     to_port = 22
+    description = "ssh"
   }
 }
 
