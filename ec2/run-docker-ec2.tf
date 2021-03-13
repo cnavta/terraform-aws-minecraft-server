@@ -3,6 +3,7 @@ module "vpc" {
 
   name = "minecraft-vpc"
   cidr = "10.0.0.0/16"
+  azs = ["us-west-2a"]
 
   public_subnets  = ["10.0.101.0/24"]
 
