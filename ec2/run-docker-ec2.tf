@@ -1,3 +1,7 @@
+resource "aws_eip" "minecraft-ip" {
+  vpc = true
+}
+
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
@@ -8,6 +12,9 @@ module "vpc" {
   public_subnets  = ["10.0.101.0/24"]
 
   enable_nat_gateway = true
+  single_nat_gateway = true
+  one_nat_gateway_per_az = false
+  external_nat_ip_ids = [aws_eip.minecraft-ip.id]
 
   tags = {
     Terraform = "true"
@@ -46,10 +53,6 @@ resource "aws_key_pair" "minecraft-key" {
   public_key = file("./minecraft-server.pub")
 }
 
-resource "aws_eip" "minecraft-ip" {
-
-}
-
 resource "aws_instance" "minecraftr-ec2" {
   ami = "ami-00f9f4069d04c0c6e"
   instance_type = "t2.micro"
@@ -85,8 +88,7 @@ resource "aws_instance" "minecraftr-ec2" {
 
 resource "aws_eip_association" "minecraft-ip-assoc" {
   instance_id = aws_instance.minecraftr-ec2.id
-  network_interface_id = aws_eip.minecraft-ip.network_interface
-  public_ip = aws_eip.minecraft-ip.public_ip
+  allocation_id = aws_eip.minecraft-ip.id
 }
 
 output "external-ip" {
