@@ -22,7 +22,7 @@ resource "aws_security_group" "minecraft-security-group" {
     protocol = "tcp"
     to_port = 22
     description = "ssh"
-    cidr_blocks = "0.0.0.0/0"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
