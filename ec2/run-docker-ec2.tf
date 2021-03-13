@@ -12,8 +12,6 @@ module "vpc" {
   public_subnets  = ["10.0.101.0/24"]
 
   enable_nat_gateway = true
-  single_nat_gateway = true
-  one_nat_gateway_per_az = false
   external_nat_ip_ids = [aws_eip.minecraft-ip.id]
 
   tags = {
