@@ -1,5 +1,21 @@
+module "vpc" {
+  source = "terraform-aws-modules/vpc/aws"
+
+  name = "minecraft-vpc"
+  cidr = "10.0.0.0/16"
+
+  public_subnets  = ["10.0.101.0/24"]
+
+  enable_nat_gateway = true
+
+  tags = {
+    Terraform = "true"
+  }
+}
+
 resource "aws_security_group" "minecraft-security-group" {
   name = "minecraft-security-group"
+  vpc_id = module.vpc.vpc_id
   ingress {
     from_port = 22
     protocol = "ssh"
@@ -13,6 +29,7 @@ resource "aws_key_pair" "minecraft-key" {
 }
 
 resource "aws_eip" "minecraft-ip" {
+
 }
 
 resource "aws_ebs_volume" "minecraft-storage" {
@@ -23,7 +40,7 @@ resource "aws_ebs_volume" "minecraft-storage" {
 resource "aws_instance" "minecraftr-ec2" {
   ami = "ami-00f9f4069d04c0c6e"
   instance_type = "t2.micro"
-  subnet_id = "subnet-0f7579a46c54b0142"
+  subnet_id = module.vpc.public_subnets[0]
   key_name = "minecraft-key"
   security_groups = [aws_security_group.minecraft-security-group.id]
 
